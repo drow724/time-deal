@@ -6,9 +6,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Member  {
 
 	@Id
@@ -17,8 +19,14 @@ public class Member  {
 	
 	private String email;
 	
+	private String delYn = "N";
+	
 	public Member(MemberDto dto) {
 		this.email = dto.getEmail();
+	}
+
+	public void delete() {
+		this.delYn = "Y";
 	}
 
 }

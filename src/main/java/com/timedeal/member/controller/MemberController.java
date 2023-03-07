@@ -1,5 +1,7 @@
 package com.timedeal.member.controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,4 +29,15 @@ public class MemberController {
 		return member;
 	}
 	
+	@DeleteMapping
+	public Member delete(@RequestBody MemberDto dto, HttpSession session) {
+		Member member = memberService.delete(new Member(dto));
+		session.removeAttribute(member.getEmail());
+		return member;
+	}
+	
+	@GetMapping
+	public Object test(@RequestBody MemberDto dto, HttpSession session) {
+		return session.getAttribute(dto.getEmail());
+	}
 }
