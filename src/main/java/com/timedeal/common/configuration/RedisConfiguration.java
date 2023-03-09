@@ -1,4 +1,4 @@
-package com.timedeal.configuration;
+package com.timedeal.common.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,10 +24,10 @@ public class RedisConfiguration {
 
 	@Value("${spring.redis.port}")
 	private int port;
-	
+
 	@Value("${spring.redis.host}")
-    private String host;
-    
+	private String host;
+
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
@@ -36,38 +36,42 @@ public class RedisConfiguration {
 		return new LettuceConnectionFactory(configuration);
 	}
 
-    @Bean
-    public RedisTemplate<?, ?> redisTemplate(LettuceConnectionFactory connectionFactory) {
-    	RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+	@Bean
+	public RedisTemplate<?, ?> redisTemplate(LettuceConnectionFactory connectionFactory) {
+		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
 		redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
 		redisTemplate.setConnectionFactory(connectionFactory);
 		return redisTemplate;
-    }
-    
-    @Profile("local")
-    @Bean
-    public EmbeddedRedisConfiguration embeddedRedisConfiguration() {
-		return new EmbeddedRedisConfiguration(port);
-    }
+	}
 
-    static class EmbeddedRedisConfiguration {
-    	
-    	private final RedisServer redisServer;
-        
-        public EmbeddedRedisConfiguration(int port) {
+	@Profile("local")
+	@Bean
+	public EmbeddedRedisConfiguration embeddedRedisConfiguration() {
+		return new EmbeddedRedisConfiguration(port);
+	}
+
+	static class EmbeddedRedisConfiguration {
+
+		private final RedisServer redisServer;
+
+		public EmbeddedRedisConfiguration(int port) {
 			this.redisServer = new RedisServer(port);
 		}
 
 		@PostConstruct
-        public void postConstruct() {
-            redisServer.start();
-        }
+		public void postConstruct() {
+			if (redisServer.isActive()) {
+				redisServer.stop();
+			}
+			redisServer.start();
 
-        @PreDestroy
-        public void preDestroy() {
-            redisServer.stop();
-        }
-    }
-    
+		}
+
+		@PreDestroy
+		public void preDestroy() {
+			redisServer.stop();
+		}
+	}
+
 }
