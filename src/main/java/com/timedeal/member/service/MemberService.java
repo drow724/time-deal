@@ -1,29 +1,15 @@
 package com.timedeal.member.service;
 
-import org.springframework.stereotype.Service;
+import java.util.Optional;
 
-import com.timedeal.common.service.CrudService;
+import com.timedeal.member.dto.MemberDto;
 import com.timedeal.member.entity.Member;
-import com.timedeal.member.repository.MemberRepository;
 
-import lombok.RequiredArgsConstructor;
+public interface MemberService {
 
-@Service
-@RequiredArgsConstructor
-public class MemberService implements CrudService<Member> {
-
-	private final MemberRepository memberRepository;
+	public Member join(MemberDto dto);
 	
-	@Override
-	public Member save(Member member) {
-		return memberRepository.save(member);
-	}
-
-	@Override
-	public Member delete(Member member) {
-		member = memberRepository.findByEmail(member.getEmail());
-		member.delete();
-		return member;
-	}
-
+	public Member delete(MemberDto dto);
+	
+	public Member login(MemberDto dto);
 }

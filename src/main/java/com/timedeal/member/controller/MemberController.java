@@ -1,7 +1,9 @@
 package com.timedeal.member.controller;
 
+import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,23 +23,24 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-	
-	@PostMapping
+
+	@PostMapping("/login")
+	public Member login(@RequestBody MemberDto dto, HttpSession session) {		
+		return memberService.login(dto);
+	}
+
+	@PostMapping("/join")
 	public Member join(@RequestBody MemberDto dto, HttpSession session) {
-		Member member = memberService.save(new Member(dto));
+		Member member = memberService.join(dto);
 		session.setAttribute(member.getEmail(), new LoginDto(member));
 		return member;
 	}
-	
+
 	@DeleteMapping
 	public Member delete(@RequestBody MemberDto dto, HttpSession session) {
-		Member member = memberService.delete(new Member(dto));
+		Member member = memberService.delete(dto);
 		session.removeAttribute(member.getEmail());
 		return member;
 	}
-	
-	@GetMapping
-	public Object test(@RequestBody MemberDto dto, HttpSession session) {
-		return session.getAttribute(dto.getEmail());
-	}
+
 }
