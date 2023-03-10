@@ -7,15 +7,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Product {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String name;
@@ -29,5 +32,10 @@ public class Product {
 	public Product(ProductDto dto) {
 		this.name = dto.getName();
 		this.stock = dto.getStock();
+	}
+
+	public void update(ProductDto dto) {
+		this.name = dto.getName();
+		this.stock = dto.getStock();	
 	}
 }
