@@ -1,4 +1,4 @@
-package com.timedeal.member.service.impl;
+package com.timedeal.api.service.impl;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -7,10 +7,10 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.timedeal.member.dto.MemberDto;
-import com.timedeal.member.entity.Member;
-import com.timedeal.member.repository.MemberRepository;
-import com.timedeal.member.service.MemberService;
+import com.timedeal.api.dto.MemberDto;
+import com.timedeal.api.entity.Member;
+import com.timedeal.api.repository.MemberRepository;
+import com.timedeal.api.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 

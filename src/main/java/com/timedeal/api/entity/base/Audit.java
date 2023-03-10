@@ -1,4 +1,4 @@
-package com.timedeal.member.entity.base;
+package com.timedeal.api.entity.base;
 
 import java.time.LocalDateTime;
 

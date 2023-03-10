@@ -13,6 +13,11 @@ import com.timedeal.common.response.ErrorResponse;
 @RestControllerAdvice
 public class ControllerAdvice {
 
+	@ExceptionHandler(IllegalAccessException.class)
+	public ResponseEntity<ErrorResponse> IllegalAccessHandle(IllegalAccessException e) {
+		return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getClass().getSimpleName(), e.getMessage()), HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(NoSuchElementException.class)
 	public ResponseEntity<ErrorResponse> noSuchElementExceptionHandle(NoSuchElementException e) {
 		return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getClass().getSimpleName(), e.getMessage()), HttpStatus.BAD_REQUEST);

@@ -1,9 +1,7 @@
-package com.timedeal.member.service;
+package com.timedeal.api.service;
 
-import java.util.Optional;
-
-import com.timedeal.member.dto.MemberDto;
-import com.timedeal.member.entity.Member;
+import com.timedeal.api.dto.MemberDto;
+import com.timedeal.api.entity.Member;
 
 public interface MemberService {
 
