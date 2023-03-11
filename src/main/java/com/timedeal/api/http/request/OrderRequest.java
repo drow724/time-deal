@@ -1,12 +1,14 @@
-package com.timedeal.api.dto;
+package com.timedeal.api.http.request;
 
 import lombok.Getter;
 
 @Getter
-public class OrderDto {
+public class OrderRequest {
 
 	private Long productId;
 	
 	private Integer orderCount;
+	
+	private String city;
 	
 }

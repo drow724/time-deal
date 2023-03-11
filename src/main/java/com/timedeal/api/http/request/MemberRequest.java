@@ -1,4 +1,4 @@
-package com.timedeal.api.dto;
+package com.timedeal.api.http.request;
 
 import com.timedeal.common.constant.Role;
 
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberDto {
+public class MemberRequest {
 
 	private String email;
 	

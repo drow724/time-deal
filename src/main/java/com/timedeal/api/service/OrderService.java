@@ -1,10 +1,31 @@
 package com.timedeal.api.service;
 
-import com.timedeal.api.dto.OrderDto;
+import java.util.NoSuchElementException;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.timedeal.api.entity.Order;
+import com.timedeal.api.entity.Product;
+import com.timedeal.api.http.request.OrderRequest;
+import com.timedeal.api.repository.OrderRepository;
+import com.timedeal.api.repository.ProductRepository;
 
-public interface OrderService {
+import lombok.RequiredArgsConstructor;
 
-	public Order save(OrderDto dto);
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class OrderService implements OrderUseCase {
+
+	private final OrderRepository orderRepository;
+
+	private final ProductRepository productRepository;
+	
+	@Override
+	public Order save(Long memberid, OrderRequest request) {
+		Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new NoSuchElementException("주문 상품이 존재하지 않습니다."));
+		return orderRepository.save(new Order(memberid, product, request));
+	}
 
 }

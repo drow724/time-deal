@@ -3,8 +3,8 @@ package com.timedeal.api.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.timedeal.api.dto.MemberDto;
 import com.timedeal.api.entity.base.Audit;
+import com.timedeal.api.http.request.MemberRequest;
 import com.timedeal.common.constant.Role;
 import com.timedeal.common.util.BooleanToYNConverter;
 
@@ -41,14 +41,20 @@ public class Member extends Audit {
 	@Convert(converter = BooleanToYNConverter.class)
 	private Boolean delYn = Boolean.FALSE;
 	
-	public Member(MemberDto dto) {
-		this.email = dto.getEmail();
-		this.password = dto.getPassword();
-		this.role = dto.getRole();
+	public Member(MemberRequest request) {
+		this.email = request.getEmail();
+		this.password = request.getPassword();
+		this.role = request.getRole();
 	}
 
+	public Member(Long memberId) {
+		this.id= memberId;
+	}
+	
 	public void delete() {
 		this.delYn = Boolean.TRUE;
 	}
+
+	
 
 }

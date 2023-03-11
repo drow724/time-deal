@@ -12,6 +12,8 @@ public class LoginDto implements Serializable{
 
 	private static final long serialVersionUID = -2314912121387126592L;
 
+	private Long id;
+	
 	private String email;
 	
 	private String password;
@@ -19,7 +21,18 @@ public class LoginDto implements Serializable{
 	private Role role;
 	
 	public LoginDto(Member member) {
+		this.id = member.getId();
 		this.email = member.getEmail();
-		this.password = member.getPassword();
+	}
+
+	public LoginDto(Object attribute) throws IllegalAccessException {
+		if(attribute instanceof LoginDto) {
+			LoginDto dto = (LoginDto) attribute;
+			this.email = dto.getEmail();
+			this.role = dto.getRole();
+		} else {
+			throw new IllegalAccessException("로그인이 필요한 서비스입니다.");
+		}
+			
 	}
 }

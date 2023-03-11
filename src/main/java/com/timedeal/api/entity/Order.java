@@ -1,7 +1,8 @@
 package com.timedeal.api.entity;
 
-import com.timedeal.api.dto.OrderDto;
+import com.timedeal.api.entity.base.Audit;
 import com.timedeal.api.entity.embedded.Address;
+import com.timedeal.api.http.request.OrderRequest;
 import com.timedeal.common.util.BooleanToYNConverter;
 
 import jakarta.persistence.Column;
@@ -16,9 +17,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 
-@Entity
+@Entity(name = "orders")
 @Getter
-public class Order {
+public class Order extends Audit {
 
 	@Id
 	@Column(name = "order_id")
@@ -40,11 +41,16 @@ public class Order {
 	@Convert(converter = BooleanToYNConverter.class)
 	private Boolean deliveryYn = Boolean.FALSE;
 	
-	public Order(OrderDto dto) {
-		// TODO Auto-generated constructor stub
+	public Order(Long memberId, Product product, OrderRequest request) {
+		if(product.getStock() < request.getOrderCount()) {
+			throw new IllegalArgumentException("재고 수량이 부족합니다.");
+		}
+		this.member = new Member(memberId);
+		this.product = product;
+		this.address = new Address(request.getCity());
 	}
 	
-	public void update(OrderDto dto) {
+	public void update(OrderRequest request) {
 		// TODO Auto-generated method stub
 		
 	}
