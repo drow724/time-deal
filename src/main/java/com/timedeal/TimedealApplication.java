@@ -4,8 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Profile;
 
-import com.timedeal.api.dto.MemberDto;
 import com.timedeal.api.entity.Member;
+import com.timedeal.api.http.request.MemberRequest;
 import com.timedeal.api.repository.MemberRepository;
 import com.timedeal.common.constant.Role;
 
@@ -25,7 +25,7 @@ public class TimedealApplication {
 	@Profile("local")
 	@PostConstruct
 	public void init() {
-		MemberDto dto = new MemberDto();
+		MemberRequest dto = new MemberRequest();
 		dto.setEmail("admin");
 		dto.setPassword("admin123");
 		dto.setRole(Role.ADMIN);

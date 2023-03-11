@@ -3,7 +3,8 @@ package com.timedeal.api.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.timedeal.api.dto.ProductDto;
+import com.timedeal.api.entity.base.Audit;
+import com.timedeal.api.http.request.ProductRequest;
 import com.timedeal.common.util.BooleanToYNConverter;
 
 import jakarta.persistence.Column;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Product {
+public class Product extends Audit {
 
 	@Id
 	@Column(name = "product_id")
@@ -37,17 +38,21 @@ public class Product {
 	@OneToMany(mappedBy = "product")
 	List<Order> orders = new ArrayList<>();
 	
-	public Product(ProductDto dto) {
-		this.name = dto.getName();
-		this.stock = dto.getStock();
+	public Product(ProductRequest request) {
+		this.name = request.getName();
+		this.stock = request.getStock();
 	}
 
-	public void update(ProductDto dto) {
-		this.name = dto.getName();
-		this.stock = dto.getStock();	
+	public void update(ProductRequest request) {
+		this.name = request.getName();
+		this.stock = request.getStock();	
 	}
 
 	public void delete() {
 		this.delYn = Boolean.TRUE;
+	}
+
+	public void order(Integer orderCount) {
+		this.stock -= orderCount;
 	}
 }

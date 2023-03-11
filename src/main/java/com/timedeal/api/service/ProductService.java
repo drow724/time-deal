@@ -1,21 +1,52 @@
 package com.timedeal.api.service;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.timedeal.api.dto.ProductDto;
 import com.timedeal.api.entity.Product;
+import com.timedeal.api.http.request.ProductRequest;
+import com.timedeal.api.repository.ProductRepository;
 
-public interface ProductService {
+import lombok.RequiredArgsConstructor;
 
-	public Product get(Long id);
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class ProductService implements ProductUseCase {
 
-	public Page<Product> getList(Pageable pageable);
+	private final ProductRepository productRepository;
+
+	@Override
+	public Product get(Long id) {
+		return productRepository.findByIdAndDelYnFalse(id).orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
+	}
 	
-	public Product save(ProductDto dto);
+	@Override
+	public Page<Product> getList(Pageable pageable) {
+		return productRepository.findByDelYnFalse(pageable);
+	}
+	
+	@Override
+	public Product save(ProductRequest request) {
+		return productRepository.save(new Product(request));
+	}
 
-	public Product update(Long id, ProductDto dto);
+	@Override
+	public Product update(Long id, ProductRequest request) {
+		Product product = productRepository.findByIdAndDelYnFalse(id)
+				.orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
+		product.update(request);
+		return product;
+	}
 
-	public Product delete(Long id);
-
+	@Override
+	public Product delete(Long id) {
+		Product product = productRepository.findByIdAndDelYnFalse(id).orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
+		product.delete();
+		return product;
+	}
 }

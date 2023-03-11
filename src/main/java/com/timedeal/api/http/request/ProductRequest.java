@@ -1,11 +1,11 @@
-package com.timedeal.api.dto;
+package com.timedeal.api.http.request;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Lob;
 import lombok.Getter;
 
 @Getter
-public class ProductDto {
+public class ProductRequest {
 
 	private Long id;
 	
