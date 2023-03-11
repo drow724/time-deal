@@ -1,5 +1,8 @@
 package com.timedeal.api.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.timedeal.api.dto.MemberDto;
 import com.timedeal.api.entity.base.Audit;
 import com.timedeal.common.constant.Role;
@@ -11,6 +14,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +24,7 @@ import lombok.NoArgsConstructor;
 public class Member extends Audit {
 
 	@Id
+	@Column(name = "member_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
@@ -28,6 +33,9 @@ public class Member extends Audit {
 	private String password;
 	
 	private Role role;
+	
+	@OneToMany(mappedBy = "member")
+	List<Order> orders = new ArrayList<>();
 	
 	@Column(columnDefinition = "VARCHAR(1) DEFAULT 'N'")
 	@Convert(converter = BooleanToYNConverter.class)

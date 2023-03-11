@@ -1,5 +1,8 @@
 package com.timedeal.api.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.timedeal.api.dto.ProductDto;
 import com.timedeal.common.util.BooleanToYNConverter;
 
@@ -9,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +22,7 @@ import lombok.NoArgsConstructor;
 public class Product {
 
 	@Id
+	@Column(name = "product_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
@@ -28,6 +33,9 @@ public class Product {
 	private Boolean delYn = Boolean.FALSE;
 	
 	private Integer stock;
+	
+	@OneToMany(mappedBy = "product")
+	List<Order> orders = new ArrayList<>();
 	
 	public Product(ProductDto dto) {
 		this.name = dto.getName();
