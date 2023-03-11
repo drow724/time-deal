@@ -8,7 +8,7 @@ import com.timedeal.common.constant.Role;
 import lombok.Getter;
 
 @Getter
-public class LoginDto implements Serializable{
+public class LoginDto implements Serializable {
 
 	private static final long serialVersionUID = -2314912121387126592L;
 
@@ -21,6 +21,7 @@ public class LoginDto implements Serializable{
 	public LoginDto(Member member) {
 		this.id = member.getId();
 		this.email = member.getEmail();
+		this.role = member.getRole();
 	}
 
 	public LoginDto(Object attribute) throws IllegalAccessException {

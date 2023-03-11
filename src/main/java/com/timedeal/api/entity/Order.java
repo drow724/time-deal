@@ -16,9 +16,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "orders")
 @Getter
+@NoArgsConstructor
 public class Order extends Audit {
 
 	@Id

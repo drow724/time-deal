@@ -14,21 +14,24 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
        
-		HttpSession session = request.getSession();
+		if(request.getMethod().equals("POST")) {
+			HttpSession session = request.getSession();
+			
+	        if (session == null) {
+	        	throw new IllegalAccessException("로그인이 필요한 서비스입니다.");
+	        }
+
+	        LoginDto member = (LoginDto) session.getAttribute("login");
+	        
+	        if (member == null) {
+	        	throw new IllegalAccessException("로그인이 필요한 서비스입니다.");
+	        }
+
+	        if(member.getRole() != Role.ADMIN) {
+	        	throw new IllegalAccessException("요청권한이 없습니다.");
+	        }
+		}
 		
-        if (session == null) {
-        	throw new IllegalAccessException("로그인이 필요한 서비스입니다.");
-        }
-
-        LoginDto member = (LoginDto) session.getAttribute("login");
-        
-        if (member == null) {
-        	throw new IllegalAccessException("로그인이 필요한 서비스입니다.");
-        }
-
-        if(member.getRole() != Role.ADMIN) {
-        	throw new IllegalAccessException("요청권한이 없습니다.");
-        }
         
         return true;
     }

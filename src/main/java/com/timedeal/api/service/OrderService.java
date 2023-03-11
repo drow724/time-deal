@@ -2,9 +2,12 @@ package com.timedeal.api.service;
 
 import java.util.NoSuchElementException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.timedeal.api.dto.ProductMemberDto;
 import com.timedeal.api.entity.Member;
 import com.timedeal.api.entity.Order;
 import com.timedeal.api.entity.Product;
@@ -12,6 +15,7 @@ import com.timedeal.api.http.request.OrderRequest;
 import com.timedeal.api.repository.MemberRepository;
 import com.timedeal.api.repository.OrderRepository;
 import com.timedeal.api.repository.ProductRepository;
+import com.timedeal.api.repository.query.OrderQueryRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +29,17 @@ public class OrderService implements OrderUseCase {
 	private final ProductRepository productRepository;
 	
 	private final MemberRepository memberRepository;
+	
+	private final OrderQueryRepository orderQueryRepository;
+	@Override
+	public Page<ProductMemberDto> getOrderByMember(Long id, Pageable pageable) {
+		return orderQueryRepository.findByMemberId(id, pageable);
+	}
+	
+	@Override
+	public Page<Member> getOrderByProduct(Long id, Pageable pageable) {
+		return orderQueryRepository.findByProductId(id, pageable);
+	}
 	
 	@Override
 	public Order save(Long memberid, OrderRequest request) {

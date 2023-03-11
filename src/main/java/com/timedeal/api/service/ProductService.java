@@ -21,11 +21,13 @@ public class ProductService implements ProductUseCase {
 	private final ProductRepository productRepository;
 
 	@Override
+	@Transactional(readOnly = true)
 	public Product get(Long id) {
 		return productRepository.findByIdAndDelYnFalse(id).orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public Page<Product> getList(Pageable pageable) {
 		return productRepository.findByDelYnFalse(pageable);
 	}
