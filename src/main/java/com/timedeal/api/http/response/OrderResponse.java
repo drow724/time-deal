@@ -12,11 +12,14 @@ public class OrderResponse {
 	
 	private final Address address;
 	
+	private final Integer orderCount;
+	
 	private final Boolean deliveryYn;
 	
 	public OrderResponse(Order order) {
 		this.id = order.getId();
 		this.address = order.getAddress();
+		this.orderCount = order.getOrderCount();
 		this.deliveryYn = order.getDeliveryYn();
 	}
 

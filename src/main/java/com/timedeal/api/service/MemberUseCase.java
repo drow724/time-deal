@@ -10,4 +10,5 @@ public interface MemberUseCase {
 	public Member delete(MemberRequest request);
 	
 	public Member login(MemberRequest request);
+
 }

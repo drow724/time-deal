@@ -8,6 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import jakarta.persistence.EntityManager;
+
 @Configuration
 @EnableJpaAuditing
 public class JPAConfiguration {
@@ -18,4 +22,8 @@ public class JPAConfiguration {
 
 	}
 
+	@Bean
+	public JPAQueryFactory jpaQueryFactory(EntityManager em) {
+		return new JPAQueryFactory(em);
+	}
 }
