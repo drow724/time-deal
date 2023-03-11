@@ -38,4 +38,8 @@ public class Product {
 		this.name = dto.getName();
 		this.stock = dto.getStock();	
 	}
+
+	public void delete() {
+		this.delYn = Boolean.TRUE;
+	}
 }
