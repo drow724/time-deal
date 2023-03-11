@@ -34,6 +34,8 @@ public class Order extends Audit {
 	@JoinColumn(name = "product_id")
 	private Product product;
 	
+	private Integer orderCount;
+	
 	@Embedded
 	private Address address;
 	
@@ -41,13 +43,16 @@ public class Order extends Audit {
 	@Convert(converter = BooleanToYNConverter.class)
 	private Boolean deliveryYn = Boolean.FALSE;
 	
-	public Order(Long memberId, Product product, OrderRequest request) {
+	public Order(Member member, Product product, OrderRequest request) {
 		if(product.getStock() < request.getOrderCount()) {
 			throw new IllegalArgumentException("재고 수량이 부족합니다.");
 		}
-		this.member = new Member(memberId);
+		this.member = member;
+		this.orderCount = request.getOrderCount();
 		this.product = product;
-		this.address = new Address(request.getCity());
+		product.order(this.orderCount);
+		
+		this.address = request.getAddress();
 	}
 	
 	public void update(OrderRequest request) {

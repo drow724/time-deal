@@ -51,4 +51,8 @@ public class Product extends Audit {
 	public void delete() {
 		this.delYn = Boolean.TRUE;
 	}
+
+	public void order(Integer orderCount) {
+		this.stock -= orderCount;
+	}
 }

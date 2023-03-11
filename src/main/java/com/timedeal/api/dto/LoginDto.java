@@ -16,8 +16,6 @@ public class LoginDto implements Serializable{
 	
 	private String email;
 	
-	private String password;
-	
 	private Role role;
 	
 	public LoginDto(Member member) {
@@ -28,6 +26,7 @@ public class LoginDto implements Serializable{
 	public LoginDto(Object attribute) throws IllegalAccessException {
 		if(attribute instanceof LoginDto) {
 			LoginDto dto = (LoginDto) attribute;
+			this.id = dto.getId();
 			this.email = dto.getEmail();
 			this.role = dto.getRole();
 		} else {

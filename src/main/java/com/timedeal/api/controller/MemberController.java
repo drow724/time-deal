@@ -29,7 +29,6 @@ public class MemberController {
 	public ResponseEntity<MemberResponse> login(@RequestBody MemberRequest request) {
 		Member member = memberUseCase.login(request);
 		session.setAttribute("login", new LoginDto(member));
-		
 		return ResponseEntity.ok(new MemberResponse(member));
 	}
 
