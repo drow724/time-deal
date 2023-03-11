@@ -23,12 +23,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product get(Long id) {
-		return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
+		return productRepository.findByIdAndDelYnFalse(id).orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
 	}
 	
 	@Override
 	public Page<Product> getList(Pageable pageable) {
-		return productRepository.findAll(pageable);
+		return productRepository.findByDelYnFalse(pageable);
 	}
 	
 	@Override
@@ -38,9 +38,16 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product update(Long id, ProductDto dto) {
-		Product product = productRepository.findById(id)
+		Product product = productRepository.findByIdAndDelYnFalse(id)
 				.orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
 		product.update(dto);
+		return product;
+	}
+
+	@Override
+	public Product delete(Long id) {
+		Product product = productRepository.findByIdAndDelYnFalse(id).orElseThrow(() -> new NoSuchElementException("해당 상품이 존재하지 않습니다."));
+		product.delete();
 		return product;
 	}
 }
