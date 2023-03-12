@@ -35,7 +35,7 @@ public class Member extends Audit {
 	private Role role;
 	
 	@OneToMany(mappedBy = "member")
-	List<Order> orders = new ArrayList<>();
+	private List<Order> orders = new ArrayList<>();
 	
 	@Column(columnDefinition = "VARCHAR(1) DEFAULT 'N'")
 	@Convert(converter = BooleanToYNConverter.class)

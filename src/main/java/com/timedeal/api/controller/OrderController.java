@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import com.timedeal.api.dto.LoginDto;
 import com.timedeal.api.dto.ProductMemberDto;
 import com.timedeal.api.entity.Member;
 import com.timedeal.api.entity.Order;
+import com.timedeal.api.entity.Time;
 import com.timedeal.api.http.request.OrderRequest;
 import com.timedeal.api.http.response.MemberResponse;
 import com.timedeal.api.http.response.OrderResponse;
@@ -33,7 +35,7 @@ public class OrderController {
 	private final OrderUseCase orderUseCase;
 
 	private final HttpSession session;
-
+	
 	@GetMapping("/member/{id}")
 	public ResponseEntity<Page<ProductMemberDto>> getMemberOrder(@PathVariable Long id,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
