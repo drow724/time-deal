@@ -1,5 +1,6 @@
 package com.timedeal.api.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Member extends Audit {
+public class Member extends Audit implements Serializable {
+
+	private static final long serialVersionUID = 4668510719455545141L;
 
 	@Id
 	@Column(name = "member_id")
@@ -31,11 +34,11 @@ public class Member extends Audit {
 	private String email;
 	
 	private String password;
-	
+
 	private Role role;
 	
 	@OneToMany(mappedBy = "member")
-	List<Order> orders = new ArrayList<>();
+	private List<Order> orders = new ArrayList<>();
 	
 	@Column(columnDefinition = "VARCHAR(1) DEFAULT 'N'")
 	@Convert(converter = BooleanToYNConverter.class)

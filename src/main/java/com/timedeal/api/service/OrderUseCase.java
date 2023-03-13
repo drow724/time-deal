@@ -14,6 +14,6 @@ public interface OrderUseCase {
 	
 	public Page<Member> getOrderByProduct(Long id, Pageable pageable);
 	
-	public Order save(Long id, OrderRequest request);
+	public Order save(Member member, OrderRequest request) throws IllegalAccessException;
 
 }

@@ -1,6 +1,5 @@
 package com.timedeal.api.http.response;
 
-import com.timedeal.api.dto.ProductMemberDto;
 import com.timedeal.api.entity.Product;
 
 import lombok.Getter;

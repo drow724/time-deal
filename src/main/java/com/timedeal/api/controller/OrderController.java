@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.timedeal.api.dto.LoginDto;
 import com.timedeal.api.dto.ProductMemberDto;
 import com.timedeal.api.entity.Member;
 import com.timedeal.api.entity.Order;
 import com.timedeal.api.http.request.OrderRequest;
 import com.timedeal.api.http.response.MemberResponse;
 import com.timedeal.api.http.response.OrderResponse;
+import com.timedeal.api.service.AsyncProductService;
 import com.timedeal.api.service.OrderUseCase;
 
 import jakarta.servlet.http.HttpSession;
@@ -30,10 +30,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderController {
 
+	private final AsyncProductService asyncProductService;
+	
 	private final OrderUseCase orderUseCase;
 
 	private final HttpSession session;
-
+	
 	@GetMapping("/member/{id}")
 	public ResponseEntity<Page<ProductMemberDto>> getMemberOrder(@PathVariable Long id,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
@@ -51,8 +53,9 @@ public class OrderController {
 	
 	@PostMapping
 	public ResponseEntity<OrderResponse> save(@RequestBody OrderRequest request) throws IllegalAccessException {
-		LoginDto login = new LoginDto(session.getAttribute("login"));
-		Order order = orderUseCase.save(login.getId(), request);
+		Member member = (Member) session.getAttribute("login");
+		Order order = orderUseCase.save(member, request);
+		asyncProductService.persist(member, request);
 		return ResponseEntity.ok(new OrderResponse(order));
 	}
 

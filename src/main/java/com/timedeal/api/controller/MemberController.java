@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.timedeal.api.dto.LoginDto;
 import com.timedeal.api.entity.Member;
 import com.timedeal.api.http.request.MemberRequest;
 import com.timedeal.api.http.response.MemberResponse;
@@ -28,14 +27,14 @@ public class MemberController {
 	@PostMapping("/login")
 	public ResponseEntity<MemberResponse> login(@RequestBody MemberRequest request) {
 		Member member = memberUseCase.login(request);
-		session.setAttribute("login", new LoginDto(member));
+		session.setAttribute("login", member);
 		return ResponseEntity.ok(new MemberResponse(member));
 	}
 
 	@PostMapping("/join")
 	public ResponseEntity<MemberResponse> join(@RequestBody MemberRequest request) {
 		Member member = memberUseCase.join(request);
-		session.setAttribute("login", new LoginDto(member));
+		session.setAttribute("login", member);
 		return ResponseEntity.ok(new MemberResponse(member));
 	}
 
