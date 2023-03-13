@@ -1,9 +1,8 @@
 package com.timedeal.common.interceptor;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import com.timedeal.api.dto.LoginDto;
+import com.timedeal.api.entity.Member;
 import com.timedeal.common.constant.Role;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +22,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	        	throw new IllegalAccessException("로그인이 필요한 서비스입니다.");
 	        }
 
-	        LoginDto member = (LoginDto) session.getAttribute("login");
+	        Member member = (Member) session.getAttribute("login");
 	        
 	        if (member == null) {
 	        	throw new IllegalAccessException("로그인이 필요한 서비스입니다.");

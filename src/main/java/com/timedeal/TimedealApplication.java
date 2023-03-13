@@ -1,5 +1,7 @@
 package com.timedeal;
 
+import java.net.http.HttpResponse;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Profile;
@@ -25,6 +27,7 @@ public class TimedealApplication {
 	@Profile("local")
 	@PostConstruct
 	public void init() {
+
 		MemberRequest dto = new MemberRequest();
 		dto.setEmail("admin");
 		dto.setPassword("admin123");

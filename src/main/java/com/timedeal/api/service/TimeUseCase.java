@@ -5,6 +5,8 @@ import com.timedeal.api.http.request.TimeRequest;
 
 public interface TimeUseCase {
 
-	public Time save(TimeRequest request);
+	public Time save(TimeRequest request) throws IllegalAccessException;
+
+	public Time update(TimeRequest request) throws IllegalAccessException;
 
 }
