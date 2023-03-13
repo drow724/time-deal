@@ -1,9 +1,8 @@
 package com.timedeal;
 
-import java.net.http.HttpResponse;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
 
 import com.timedeal.api.entity.Member;
@@ -15,6 +14,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 @SpringBootApplication
+@EnableAspectJAutoProxy
 @RequiredArgsConstructor
 public class TimedealApplication {
 

@@ -1,10 +1,7 @@
 package com.timedeal.api.service;
 
 import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
 
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.HashOperations;
@@ -21,6 +18,7 @@ import com.timedeal.api.entity.redis.TimeWrapper;
 import com.timedeal.api.http.request.OrderRequest;
 import com.timedeal.api.repository.OrderRepository;
 import com.timedeal.api.repository.query.OrderQueryRepository;
+import com.timedeal.common.annotation.Time;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,8 +35,6 @@ public class OrderService implements OrderUseCase {
 
 	private final RedisTemplate<String, ProductWrapper> productTemplate;
 	
-	private final RedissonClient redissonClient;
-	
 	@Override
 	public Page<ProductMemberDto> getOrderByMember(Long id, Pageable pageable) {
 		return orderQueryRepository.findByMemberId(id, pageable);
@@ -49,6 +45,7 @@ public class OrderService implements OrderUseCase {
 		return orderQueryRepository.findByProductId(id, pageable);
 	}
 
+	@Time
 	@Override
 	public Order save(Member member, OrderRequest request) throws IllegalAccessException {
 		

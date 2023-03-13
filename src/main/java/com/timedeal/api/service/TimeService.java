@@ -31,8 +31,10 @@ public class TimeService implements TimeUseCase {
 	@Override
 	public Time save(TimeRequest request) throws IllegalAccessException {
 		LocalDateTime ttl = LocalDateTime.of(request.getDate(), request.getTime());
-
-		if (LocalDateTimeUtil.now().isAfter(ttl)) {
+		System.out.println(ttl);
+		System.out.println(LocalDateTimeUtil.now());
+		System.out.println(LocalDateTimeUtil.now().isAfter(ttl));
+		if (LocalDateTimeUtil.now().isBefore(ttl)) {
 			throw new IllegalAccessException("타임딜 시간이 현재 시간보다 이전입니다.");
 		}
 
