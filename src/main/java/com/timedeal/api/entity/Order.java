@@ -52,7 +52,6 @@ public class Order extends Audit {
 		this.member = member;
 		this.orderCount = request.getOrderCount();
 		this.product = product;
-		product.order(this.orderCount);
 		
 		this.address = request.getAddress();
 	}

@@ -30,8 +30,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderController {
 
-	private final AsyncProductService asyncProductService;
-	
 	private final OrderUseCase orderUseCase;
 
 	private final HttpSession session;
@@ -55,7 +53,6 @@ public class OrderController {
 	public ResponseEntity<OrderResponse> save(@RequestBody OrderRequest request) throws IllegalAccessException {
 		Member member = (Member) session.getAttribute("login");
 		Order order = orderUseCase.save(member, request);
-		asyncProductService.persist(member, request);
 		return ResponseEntity.ok(new OrderResponse(order));
 	}
 

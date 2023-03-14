@@ -1,11 +1,10 @@
 package com.timedeal.api.service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +13,11 @@ import com.timedeal.api.entity.Member;
 import com.timedeal.api.entity.Order;
 import com.timedeal.api.entity.Product;
 import com.timedeal.api.entity.redis.ProductWrapper;
-import com.timedeal.api.entity.redis.TimeWrapper;
 import com.timedeal.api.http.request.OrderRequest;
 import com.timedeal.api.repository.OrderRepository;
+import com.timedeal.api.repository.ProductRepository;
 import com.timedeal.api.repository.query.OrderQueryRepository;
+import com.timedeal.api.repository.redis.ProductRedisRepository;
 import com.timedeal.common.annotation.Time;
 
 import lombok.RequiredArgsConstructor;
@@ -31,9 +31,11 @@ public class OrderService implements OrderUseCase {
 
 	private final OrderQueryRepository orderQueryRepository;
 
-	private final RedisTemplate<String, TimeWrapper> timeTemplate;
-
-	private final RedisTemplate<String, ProductWrapper> productTemplate;
+	private final ProductRepository productRepository;
+	
+	private final ProductRedisRepository productRedisRepository;
+	
+	private final AsyncProductService asyncService;
 	
 	@Override
 	public Page<ProductMemberDto> getOrderByMember(Long id, Pageable pageable) {
@@ -49,22 +51,19 @@ public class OrderService implements OrderUseCase {
 	@Override
 	public Order save(Member member, OrderRequest request) throws IllegalAccessException {
 		
-		HashOperations<String, String, TimeWrapper> timeOps = timeTemplate.opsForHash();
-
-		TimeWrapper time = timeOps.get("time", request.getProductId().toString());
-
-		if(time == null) {
-			throw new NoSuchElementException("해당 상품의 타임딜이 존재하지 않습니다.");
+		Optional<ProductWrapper> wrapper = productRedisRepository.findById(request.getProductId().toString());
+		
+		Product product = new Product();
+		
+		if(wrapper.isEmpty() || wrapper.get().getProduct() == null) {
+			product = productRepository.findById(request.getProductId()).orElseThrow(() -> new NoSuchElementException());
+			product.order(request.getOrderCount());
+			asyncService.cache(member, product);
+		} else {
+			product = wrapper.get().getProduct();
+			product.order(request.getOrderCount());
+			asyncService.persist(member, wrapper.get(), request);
 		}
-		
-		HashOperations<String, String, ProductWrapper> productOps = productTemplate.opsForHash();
-		ProductWrapper wrapper = productOps.get(request.getProductId().toString(), "product");
-		
-		Product product = wrapper.getProduct();
-		product.order(request.getOrderCount());
-		
-		wrapper.update(product);
-		productOps.put("product", request.getProductId().toString(), wrapper);
 		
 		return orderRepository.save(new Order(member, product, request));
 	}

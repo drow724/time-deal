@@ -31,10 +31,7 @@ public class TimeService implements TimeUseCase {
 	@Override
 	public Time save(TimeRequest request) throws IllegalAccessException {
 		LocalDateTime ttl = LocalDateTime.of(request.getDate(), request.getTime());
-		System.out.println(ttl);
-		System.out.println(LocalDateTimeUtil.now());
-		System.out.println(LocalDateTimeUtil.now().isAfter(ttl));
-		if (LocalDateTimeUtil.now().isBefore(ttl)) {
+		if (LocalDateTimeUtil.now().isAfter(ttl)) {
 			throw new IllegalAccessException("타임딜 시간이 현재 시간보다 이전입니다.");
 		}
 
@@ -43,7 +40,7 @@ public class TimeService implements TimeUseCase {
 
 		timeRepository.findByProductIdAndIsOverFalse(request.getProductId()).ifPresent(time -> {
 			LocalDateTime validation = LocalDateTime.of(time.getDate(), time.getTime());
-			if (validation.isBefore(LocalDateTimeUtil.now())) {
+			if (validation.isAfter(LocalDateTimeUtil.now())) {
 				time.over();
 			} else {
 				throw new IllegalArgumentException("해당 상품의 타임딜이 이미 존재합니다.");
