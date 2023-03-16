@@ -3,8 +3,8 @@
 
 ## Jenkins
 - url : http://146.56.38.5:8080/
-    - id : 
-    - pw : 
+    - id : guest
+    - pw : guest123
 
 # nGrinder를 이용한 성능 테스트
 
