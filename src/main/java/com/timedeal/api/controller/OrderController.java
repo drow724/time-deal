@@ -19,7 +19,6 @@ import com.timedeal.api.entity.Order;
 import com.timedeal.api.http.request.OrderRequest;
 import com.timedeal.api.http.response.MemberResponse;
 import com.timedeal.api.http.response.OrderResponse;
-import com.timedeal.api.service.AsyncProductService;
 import com.timedeal.api.service.OrderUseCase;
 
 import jakarta.servlet.http.HttpSession;

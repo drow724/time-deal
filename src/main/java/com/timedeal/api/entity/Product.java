@@ -36,10 +36,10 @@ public class Product extends Audit {
 	private Integer stock;
 	
 	@OneToMany(mappedBy = "product")
-	transient private List<Order> orders = new ArrayList<>();
+	private List<Order> orders = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "product")
-	transient private List<Time> times = new ArrayList<>();
+	private List<Time> times = new ArrayList<>();
 	
 	public Product(ProductRequest request) {
 		this.name = request.getName();
