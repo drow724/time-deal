@@ -40,13 +40,20 @@ public class RedisConfiguration {
 	private String host;
 
 	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
+	@Profile({"local","test"})
+	public RedisConnectionFactory redisStandaloneConnectionFactory() {
 		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
 		configuration.setHostName(host);
 		configuration.setPort(port);
 		return new LettuceConnectionFactory(configuration);
 	}
 
+	@Bean
+	@Profile({"dev", "uat", "prod"})
+	public RedisConnectionFactory redisConnectionFactory() {
+		return new LettuceConnectionFactory(host, port);
+	}
+	
 	@Bean
 	public ObjectMapper objectMapper() {
 		JavaTimeModule module = new JavaTimeModule();
@@ -63,16 +70,16 @@ public class RedisConfiguration {
 	}
 
 	@Bean
-	public RedisTemplate<?, ?> redisTemplate(LettuceConnectionFactory connectionFactory) {
+	public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory connectionFactory) {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setKeySerializer(new StringRedisSerializer());
 		redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
 		redisTemplate.setConnectionFactory(connectionFactory);
 		return redisTemplate;
 	}
-
-	@Profile({ "local", "test" })
+	
 	@Bean
+	@Profile({"local","test"})
 	public EmbeddedRedisConfiguration embeddedRedisConfiguration() {
 		return new EmbeddedRedisConfiguration(port);
 	}
