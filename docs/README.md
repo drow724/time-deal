@@ -5,6 +5,7 @@
 - url : http://146.56.38.5:8080/
     - id : guest
     - pw : guest123
+    - project : timeDeal
 
 # nGrinder를 이용한 성능 테스트
 
