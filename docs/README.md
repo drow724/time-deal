@@ -29,9 +29,39 @@
 # 성능측정 및 개선 내용
 
 처음에는 RDB를 이용한 주문 로직을 구상하였는데 성능 향상을 위하여 Redis를 도입하였다.
-여기서부터 문제가 발생하였는데, Redis에서 
+여기서부터 문제가 발생하였는데, Redis에서 NoSuchException이 발생하는 것이였다.
+여기저기 검색해본 결과 Repository방식 spring data redis는 transaction을 지원하지 않고, lock을 걸어서 원자성을 보존해야 했다.
+그래서 lock을 걸어서 원자성을 보존하는 방식으로 개발을 하던 중, 지인 개발자 분께서
+"cache는 cache일 뿐이다. 굳이 lock을 걸어서 사용할 바에는 redis에 데이터가 없다면 RDB에서 가져오고, 가져온 값을 redis와 동기화를 하는 작업이 필요할 것 같다."
+라고 말씀해 주셨다. 참고로 Cap theorem도 한번 찾아보라고 말씀해 주셨다...
 
+```java
+Optional<ProductWrapper> wrapper = productRedisRepository.findById(request.getProductId().toString());
+
+Product product = new Product();
+
+if(wrapper.isEmpty() || wrapper.get().getProduct() == null) {
+    product = productRepository.findById(request.getProductId()).orElseThrow(() -> new NoSuchElementException());
+    product.order(request.getOrderCount());
+    asyncService.cache(member, product);
+} else {
+    product = wrapper.get().getProduct();
+    product.order(request.getOrderCount());
+    asyncService.persist(member, wrapper.get(), request);
+}
+```
+
+주문 로직을 RDB로만 의존했을 때 TPS가 2000정도 나왔는데,
+Redis를 도입하고 3700까지 향상되었다.
+
+# 기술적으로 고민한(고생한) 부분들
+
+Local과 Product에서 Rdb와 Redis를 분리하고 싶어서, H2 임베디드 DB와 임베디드 Redis를 처음 사용해 보았다.
+스프링에서 제공해주는 임베디드 DB는 database properties를 따로 지정하지 않으면 자동으로 빈을 생성하고 실행해 주기 때문에, 큰 무리가 없었는데
+이 임베디드 redis를 사용하면서 머리가 많이 아팠다. 처음 써보는 것도 있지만, Bean등록을 환경마다 다르게 해줘야 하는데 구현을 제대로 못한거 같아 아쉽다.
+그리고 테스트 코드도 짜고 싶었는데, 챌린지 중간에 참여해서 1주일여 정도에 시간동안 기능 구현과 Redis 공부로 인해 테스트 코드를 구현해 보지 못한거 같다.
 # Api 목록
+
 - 회원
     - 회원가입 
         - url : /member/join 
