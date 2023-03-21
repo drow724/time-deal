@@ -1,6 +1,7 @@
 package com.timedeal.common.configuration;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
@@ -18,6 +19,7 @@ public class AsyncConfiguration implements AsyncConfigurer {
         executor.setMaxPoolSize(30);
         executor.setQueueCapacity(50);
         executor.setThreadNamePrefix("DDAJA-ASYNC-");
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;
     }

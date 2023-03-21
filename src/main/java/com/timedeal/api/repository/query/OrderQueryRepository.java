@@ -25,17 +25,18 @@ public class OrderQueryRepository {
 
 	public Page<ProductMemberDto> findByMemberId(Long memberId, Pageable pageable) {
 		QueryResults<ProductMemberDto> result = queryFactory
-				.select(Projections.fields(ProductMemberDto.class, product.id, product.name, order.orderCount))
-				.from(product)
-				.join(product.orders, order).where(order.member.id.eq(memberId))
-				.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetchResults();
+				.select(Projections.fields(ProductMemberDto.class, order.product.id, order.product.name,
+						order.orderCount))
+				.from(order).join(order.product, product).on(product.id.eq(order.product.id))
+				.where(order.member.id.eq(memberId)).offset(pageable.getOffset()).limit(pageable.getPageSize())
+				.fetchResults();
 		return new PageImpl<>(result.getResults(), pageable, result.getTotal());
 	}
 
 	public Page<Member> findByProductId(Long productId, Pageable pageable) {
-		QueryResults<Member> result = queryFactory.selectFrom(member).join(member.orders, order).fetchJoin()
-				.where(order.product.id.eq(productId)).offset(pageable.getOffset()).limit(pageable.getPageSize())
-				.fetchResults();
+		QueryResults<Member> result = queryFactory.select(order.member).from(order).join(order.member, member)
+				.on(member.id.eq(order.member.id)).where(order.product.id.eq(productId)).offset(pageable.getOffset())
+				.limit(pageable.getPageSize()).fetchResults();
 		return new PageImpl<>(result.getResults(), pageable, result.getTotal());
 	}
 

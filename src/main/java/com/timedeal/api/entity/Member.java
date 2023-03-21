@@ -38,7 +38,7 @@ public class Member extends Audit implements Serializable {
 	private Role role;
 	
 	@OneToMany(mappedBy = "member")
-	private List<Order> orders = new ArrayList<>();
+	transient private List<Order> orders = new ArrayList<>();
 	
 	@Column(columnDefinition = "VARCHAR(1) DEFAULT 'N'")
 	@Convert(converter = BooleanToYNConverter.class)
